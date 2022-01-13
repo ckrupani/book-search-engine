@@ -40,25 +40,25 @@ const resolvers = {
             return { token, user };
         },
         saveBook: async (_, { book }, { user }) => {
-            if (context.user) {
+            if (user) {
                 const updatedUser = await User.findOneAndUpdate(
                     { _id: user._id },
                     { $addToSet: { savedBooks: book } },
                     { new: true, runValidators: true }
                 );
-                return res.json(updatedUser);
+                return updatedUser;
             }
 
             throw new AuthenticationError("You need to be logged in!");
         },
         removeBook: async (_, { bookId }, { user }) => {
-            if (context.user) {
+            if (user) {
                 const updatedUser = await User.findOneAndUpdate(
                     { _id: user._id },
                     { $pull: { savedBooks: { bookId: bookId } } },
                     { new: true, runValidators: true }
                 );
-                return res.json(updatedUser);
+                return updatedUser;
             }
 
             throw new AuthenticationError("You need to be logged in!");
